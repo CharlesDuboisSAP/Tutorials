@@ -41,9 +41,8 @@ const verifyLinks = async (links) => {
     hooks: [{
       afterResponse: [(response) => {
         if (response.statusCode > 299) {
-
+          console.debug(response.headers);
         }
-        console.debug(response.headers);
         return response;
       }],
     }],
