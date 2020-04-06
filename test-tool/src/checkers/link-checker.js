@@ -36,8 +36,17 @@ const verifyLinks = async (links) => {
         }
 
         return linkCheck.TIMEOUT;
-      }
+      },
     },
+    hooks: [{
+      afterResponse: [(response) => {
+        if (response.statusCode > 299) {
+
+        }
+        console.debug(response.headers);
+        return response;
+      }],
+    }],
   });
   return Object
     .entries(processedResults)

@@ -1,23 +1,5 @@
 version: 2
 jobs:
-  build-all:
-    docker:
-      - image: circleci/node:10.16.0
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install dependencies
-          command: npm install --production
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - node_modules
-      - run:
-          name: Run test tool on the all tutorials
-          command: npm run test
-          no_output_timeout: '15m'
   build:
     docker:
       - image: circleci/node:10.16.0
@@ -37,10 +19,10 @@ jobs:
           paths:
             - node_modules
       - run:
-          name: Run test tool on the all tutorials
+          name: Run test tool on the last edited tutorial
           command: |
             if [[ ${RUN_BUILD} ]]; then
-              npm run test
+              npm run test-last-commit
             fi
           no_output_timeout: '15m'
 
@@ -48,15 +30,3 @@ notify:
   webhooks:
     # gitter hook
     - url: https://webhooks.gitter.im/e/15f197634234d80a32fa
-workflows:
-  version: 2
-  nightly:
-    triggers:
-    - schedule:
-        cron: "0 1 * * 0-5"
-        filters:
-          branches:
-            only:
-              - master
-    jobs:
-      - build-all
